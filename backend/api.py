@@ -6,7 +6,7 @@ def hello_world():
     return 'Hello, World!'
 
 @app.route('/signup', methods=['POST'])
-def login():
+def signup():
     if request.method == 'POST':
         return perform_signup()
  
@@ -16,7 +16,7 @@ def login():
         return perform_login()
     
 @app.route('/getUserData', methods=['POST'])
-def login():
+def getUserData():
     if request.method == 'POST':
         return perform_login()
  
