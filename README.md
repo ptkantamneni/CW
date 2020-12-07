@@ -5,6 +5,6 @@ To run the backend:
 
 ``` 
   source venv/bin/activate 
-  pip install -r requirements.txt
-  python api.py
+  pipi3 install -r requirements.txt
+  python3 api.py
 ```
