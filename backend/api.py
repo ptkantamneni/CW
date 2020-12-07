@@ -15,9 +15,9 @@ def login():
     if request.method == 'POST':
         return perform_login()
     
-@app.route('/getUserData', methods=['POST'])
+@app.route('/getUserData', methods=['GET'])
 def getUserData():
-    if request.method == 'POST':
+    if request.method == 'GET':
         return perform_login()
  
 if __name__ == '__main__':
