@@ -20,4 +20,5 @@ def getUserData():
     if request.method == 'POST':
         return perform_login()
  
-
+if __name__ == '__main__':
+    app.run(debug=True)
