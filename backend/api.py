@@ -9,7 +9,7 @@ from flask_login import (LoginManager,
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
 from datetime import datetime
 
-app1 = Flask(__name__, template_folder='../frontend')
+app1 = Flask(__name__)
 
 cors = CORS(app1)
 
@@ -155,7 +155,10 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and user.password == password:
            login_user(user)
-           return jsonify(user.to_json())
+           resp = jsonify(user.to_json())
+           resp.headers['Access-Control-Allow-Credentials'] = 'true'
+           resp.headers['Access-Control-Allow-Headers'] = "Content-Type"
+           return resp
         else:
            return jsonify({"status": 401,
                         "reason": "Username or Password is Invalid"})
