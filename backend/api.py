@@ -9,9 +9,11 @@ from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
 app1 = Flask(__name__)
 
 cors = CORS(app1)
+
+#db initialization - don't change the order
+app1.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://newuser:12345@localhost:5432/covidwatchers"
 db1 = SQLAlchemy()
 db1.init_app(app1)
-app1.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://newuser:12345@localhost:5432/covidwatchers"
 migrate = Migrate(app1, db1)
 
 class User(db1.Model):
