@@ -8,6 +8,7 @@ from flask_login import (LoginManager,
 
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
 from datetime import datetime
+import user_route
 
 app1 = Flask(__name__, template_folder='template')
 
@@ -195,6 +196,10 @@ def handle_user():
                         address=data['address'], age=data['age'], password=data['password'], hasSymptoms=data['hasSymptoms'])
             db1.session.add(user)
             db1.session.commit()
+            
+            #calculate user score and update
+            user_route.updateUserScore(user.id)
+
             return {"message": f"User {user.firstName} has been created successfully."}
         else:
             return {"error": "The request payload is not in JSON format"}

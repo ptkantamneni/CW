@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from api import db1 as db, Event, User
 from datetime import datetime, timedelta
 import event_scoring_route
+import user_route
 
 event = Blueprint('event', __name__, url_prefix = '/event')
 
@@ -120,3 +121,5 @@ def updateEventsForUserWithCovid(user_id):
                 new_score = event_scoring_route.calculateScoreForEventId(event_to_update_score.id)
                 Event.query.filter_by(id=same_event.id).update({'riskScore': new_score})
                 db.session.commit()
+                
+                user_route.updateUserScore(same_event.createdById)
