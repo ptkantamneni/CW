@@ -135,7 +135,7 @@ def handle_user():
         if request.is_json:
             data = request.get_json()
             user = User(firstName=data['firstName'], lastName=data['lastName'], email=data['email'],
-                        address=data['address'], age=data['age'])
+                        address=data['address'], age=data['age'], password=data['password'])
             db1.session.add(user)
             db1.session.commit()
             return {"message": f"User {user.firstName} has been created successfully."}
