@@ -186,9 +186,11 @@ if __name__ == '__main__':
     from event_route import event
     from user_route import user
     from relationship_route import relationship
+    from event_scoring_route import event_scoring
     app1.register_blueprint(event)
     app1.register_blueprint(user)
     app1.register_blueprint(relationship)
+    app1.register_blueprint(event_scoring)
     app1.run(debug=True)
 
 @login_manager.user_loader
