@@ -11,23 +11,32 @@ def hello():
 @user_scoring.route('/user_scoring', methods = ['GET'])
 def getScoreForUserId():
     if(request.method == 'GET'):
-        user = User.query.filter_by(id=request.args.get('userId')).first()
-        last_14days_events = db.session.query(Event).filter(Event.createdById==request.args.get('userId'), Event.updatedDate >= getDate14DayAgo()).all()
-        
-        age_w = 1.1
-        num_events_w = 1.4
-        avg_event_score_w = 1.2
-        symptoms_w = 1.3
-
-        avg_event_s = sum([event.serialize()['riskScore'] for event in last_14days_events]) / len(last_14days_events)
-        age_s = getAgeScore(user.age)
-        num_events_s = getNumEventsScore(len(last_14days_events))
-        symptoms_s = getSymptomsScore(user.hasSymptoms)
-
-        return {"userScore": (age_w * age_s + num_events_w * num_events_s + avg_event_score_w * avg_event_s + symptoms_w * symptoms_s) / (age_w + num_events_w + avg_event_score_w + symptoms_w)}
+        userId = request.args.get('userId')
+        user_score = calculateScoreForId(userId)
+        return {"userScore": user_score}
 
     return 'SWWE'
 
+def calculateScoreForId(userId):
+    user = User.query.filter_by(id=userId).first()
+    last_14days_events = db.session.query(Event).filter(Event.createdById==userId, Event.updatedDate >= getDate14DayAgo()).all()
+        
+    age_w = 1.1
+    num_events_w = 1.4
+    avg_event_score_w = 1.2
+    symptoms_w = 1.3
+
+    if len(last_14days_events) == 0:
+        avg_event_s = 0
+    else: 
+        avg_event_s = sum([event.serialize()['riskScore'] for event in last_14days_events]) / len(last_14days_events)
+    age_s = getAgeScore(user.age)
+    num_events_s = getNumEventsScore(len(last_14days_events))
+    symptoms_s = getSymptomsScore(user.hasSymptoms)
+    
+    user_score = (age_w * age_s + num_events_w * num_events_s + avg_event_score_w * avg_event_s + symptoms_w * symptoms_s) / (age_w + num_events_w + avg_event_score_w + symptoms_w)    
+    
+    return user_score
 
 
 def getDate14DayAgo():
