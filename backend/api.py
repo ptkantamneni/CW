@@ -3,18 +3,14 @@ from flask_cors import CORS, cross_origin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
-import user_route
-import relationship_route
-import event_route
+
+# import event_route
     
 app1 = Flask(__name__)
 
 cors = CORS(app1)
 db1 = SQLAlchemy()
 db1.init_app(app1)
-app1.register_blueprint(event_route.event)
-app1.register_blueprint(user_route.user)
-app1.register_blueprint(relationship_route.relationship)
 app1.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://newuser:12345@localhost:5432/covidwatchers"
 migrate = Migrate(app1, db1)
 
@@ -125,4 +121,10 @@ def handle_user():
         print(e)
  
 if __name__ == '__main__':
+    from event_route import event
+    from user_route import user
+    from relationship_route import relationship
+    app1.register_blueprint(event)
+    app1.register_blueprint(user)
+    app1.register_blueprint(relationship)
     app1.run(debug=True)
