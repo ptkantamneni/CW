@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS, cross_origin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,7 @@ from flask_login import (LoginManager,
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
 from datetime import datetime
 
-app1 = Flask(__name__)
+app1 = Flask(__name__, template_folder='../frontend')
 
 cors = CORS(app1)
 
@@ -139,6 +139,12 @@ class Event(db1.Model):
 @app1.route('/')
 def hello_world():
     return 'Hello, World!'
+
+
+@app1.route('/render-login', methods=['GET'])
+def render_login():
+    if request.method == 'GET':
+        return render_template('login.html')
 
 @app1.route('/login', methods=['POST'])
 def login():
