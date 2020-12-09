@@ -3,9 +3,8 @@ from flask_cors import CORS, cross_origin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
+from datetime import datetime
 
-# import event_route
-    
 app1 = Flask(__name__)
 
 cors = CORS(app1)
@@ -67,9 +66,9 @@ class Event(db1.Model):
     openSpace = db1.Column(Boolean)
     riskScore = db1.Column(Float)
     createdById = db1.Column(Integer)
-    checkInDate = db1.Column(DateTime)
-    checkOutDate = db1.Column(DateTime)
-    updatedDate = db1.Column(DateTime)
+    checkInDate = db1.Column(DateTime, default=datetime.utcnow)
+    checkOutDate = db1.Column(DateTime, default=datetime.utcnow)
+    updatedDate = db1.Column(DateTime, default=datetime.utcnow)
 
     def __init__(self, placeName, address, numPeople, socialDistanceRating, maskComplianceRating, openSpace, riskScore, createdById, checkInDate, checkOutDate, updatedDate):
         self.placeName = placeName 
@@ -86,6 +85,21 @@ class Event(db1.Model):
 
     def __repr__(self):
         return f"<Event {self.placeName} {self.address} {self.numPeople}>"
+
+    def serialize(self):
+        return {
+            'placeName': self.placeName,
+            'address': self.address,
+            'numPeople': self.numPeople,
+            'socialDistancing': self.socialDistanceRating,
+            'maskComplianceRating': self.maskComplianceRating,
+            'openSpace': self.openSpace,
+            'riskScore': self.riskScore,
+            'createdById': self.createdById,
+            'checkInDate': self.checkInDate,
+            'checkOutDate': self.checkOutDate,
+            'updatedDate': self.updatedDate
+        }
 
 @app1.route('/')
 def hello_world():
