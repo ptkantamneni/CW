@@ -32,3 +32,8 @@ VALUES
 (7,1,7,E'family'),
 (8,3,1,E'friend'),
 (9,4,1,E'friend');
+
+-- set id auto increment by serial
+SELECT setval('user_id_seq', MAX(id)) FROM "user";
+SELECT setval('event_id_seq', MAX(id)) FROM "event";
+SELECT setval('relationship_id_seq', MAX(id)) FROM "relationship";

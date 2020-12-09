@@ -19,6 +19,9 @@ def getScoreForUserId():
 
 def calculateScoreForId(userId):
     user = User.query.filter_by(id=userId).first()
+    if(user.testDate is not None and user.testDate >= getDate14DayAgo().date() and user.testResult is True):
+        return 5
+
     last_14days_events = db.session.query(Event).filter(Event.createdById==userId, Event.updatedDate >= getDate14DayAgo()).all()
         
     age_w = 1.1
@@ -36,7 +39,7 @@ def calculateScoreForId(userId):
     
     user_score = (age_w * age_s + num_events_w * num_events_s + avg_event_score_w * avg_event_s + symptoms_w * symptoms_s) / (age_w + num_events_w + avg_event_score_w + symptoms_w)    
     
-    return user_score
+    return round(user_score,3)
 
 
 def getDate14DayAgo():
