@@ -3,14 +3,19 @@ $( document ).ready(function() {
     console.log( "ready!" );
 
 	$("#login-button").click(function(){
+		var payload = { "username": $("#email-login").val(),
+				"password": $("#password-login").val() }	
+
+		console.log(JSON.stringify(payload));
+
 		$.ajax({
 			'url' : 'http://localhost:5000/login',
 			'type' : 'POST',
-			'data' : {
-			    'numberOfWords' : 10
-			},
-			'success' : function(data) {              
-			    alert('Data: '+data);
+			 contentType: 'application/json',
+			'data' : JSON.stringify(payload),
+			'success' : function(data, code, xhr) {              
+			    console.log('Data: '+ data);
+		            console.log("cookie: " + JSON.stringify(code));
 			},
 			'error' : function(request,error)
 			{
