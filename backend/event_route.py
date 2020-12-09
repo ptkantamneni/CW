@@ -4,12 +4,12 @@ from api import db1 as db, Event
 
 event = Blueprint('event', __name__, url_prefix = '/event')
 
-@event.route('/helloEvent')
+@event.route('/hello_event')
 def hello():
     return "Hello Event"
 
 
-@event.route('/createEvent', methods = ['POST'])
+@event.route('/create_event', methods = ['POST'])
 def createEvent():
     if(request.method == 'POST' and request.is_json):
         data = request.get_json()
@@ -34,7 +34,7 @@ def createEvent():
     return "SWWE"
 
 
-@event.route('/getEvent', methods = ['GET'])
+@event.route('/get_event', methods = ['GET'])
 def getEvent():
     if(request.method == 'GET'):
         event = Event.query.filter_by(id=request.args.get('id', default=-1)).first()
@@ -43,7 +43,7 @@ def getEvent():
     return 'SWWE'
 
 
-@event.route('updateEvent', methods = ['PUT'])
+@event.route('update_event', methods = ['PUT'])
 def updateEvent():
     if(request.method == 'PUT'):
         newData = request.get_json()
@@ -54,7 +54,7 @@ def updateEvent():
     return 'SWWE'
 
 
-@event.route('deleteEvent', methods = ['DELETE'])
+@event.route('delete_event', methods = ['DELETE'])
 def deleteEvent():
     if(request.method == 'DELETE'):
         eventsDeleted = Event.query.filter_by(id=request.args.get('id')).delete()

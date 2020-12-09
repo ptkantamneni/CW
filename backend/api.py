@@ -39,13 +39,14 @@ class User(UserMixin, db1.Model):
     hasSymptoms = db1.Column(Boolean, nullable=True)
     symptomsOnSetDate = db1.Column(Date, nullable=True)
 
-    def __init__(self, firstName, lastName, email, password, address, age):
+    def __init__(self, firstName, lastName, email, password, address, age, hasSymptoms):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.password = password
         self.address = address
         self.age = age
+        self.hasSymptoms = hasSymptoms
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -172,7 +173,7 @@ def handle_user():
         if request.is_json:
             data = request.get_json()
             user = User(firstName=data['firstName'], lastName=data['lastName'], email=data['email'],
-                        address=data['address'], age=data['age'], password=data['password'])
+                        address=data['address'], age=data['age'], password=data['password'], hasSymptoms=data['hasSymptoms'])
             db1.session.add(user)
             db1.session.commit()
             return {"message": f"User {user.firstName} has been created successfully."}
@@ -187,10 +188,12 @@ if __name__ == '__main__':
     from user_route import user
     from relationship_route import relationship
     from event_scoring_route import event_scoring
+    from user_scoring_route import user_scoring
     app1.register_blueprint(event)
     app1.register_blueprint(user)
     app1.register_blueprint(relationship)
     app1.register_blueprint(event_scoring)
+    app1.register_blueprint(user_scoring)
     app1.run(debug=True)
 
 @login_manager.user_loader

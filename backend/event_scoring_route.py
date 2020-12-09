@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api import db1, Relationship, User, Event
 
-event_scoring = Blueprint('event_scoring', __name__)
+event_scoring = Blueprint('event_scoring', __name__, url_prefix = '/score')
 
 @event_scoring.route('/helloScoring')
 def hello():
