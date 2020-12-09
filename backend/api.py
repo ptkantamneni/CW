@@ -7,8 +7,12 @@ import relationship_route
 import event_route
     
 app1 = Flask(__name__)
+
 db1 = SQLAlchemy()
 db1.init_app(app1)
+app1.register_blueprint(event_route.event)
+app1.register_blueprint(user_route.user)
+app1.register_blueprint(relationship_route.relationship)
 app1.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://newuser:12345@localhost:5432/covidwatchers"
 migrate = Migrate(app1, db1)
 
