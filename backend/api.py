@@ -1,9 +1,11 @@
 from flask import Flask, request
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Date, BOOLEAN
-
-
+from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
+import user_route
+import relationship_route
+import event_route
+    
 app1 = Flask(__name__)
 db1 = SQLAlchemy()
 db1.init_app(app1)
@@ -20,7 +22,7 @@ class User(db1.Model):
     age = db1.Column(Integer)
     testResult = db1.Column(String, nullable=True)
     testDate = db1.Column(Date, nullable=True)
-    hasSymptoms = db1.Column(BOOLEAN, nullable=True)
+    hasSymptoms = db1.Column(Boolean, nullable=True)
     symptomsOnSetDate = db1.Column(Date, nullable=True)
 
     def __init__(self, firstName, lastName, email, address, age):
@@ -32,6 +34,54 @@ class User(db1.Model):
 
     def __repr__(self):
         return f"<User {self.name}>"
+
+
+class Relationship(db1.Model):
+    __tablename__ = 'relationship'
+    id = db1.Column(Integer, primary_key=True)
+    userId = db1.Column(Integer)
+    friendId = db1.Column(Integer)
+    relationshipType = db1.Column(String, nullable=True)
+
+    def __init__(self, userId, friendId, relationshipType):
+        self.userId = userId 
+        self.friendId = friendId
+        self.relationshipType = relationshipType
+
+    def __repr__(self):
+        return f"<Relationship {self.userId} {self.friendId} {self.relationshipType}>"
+
+
+class Event(db1.Model):
+    __tablename__ = 'event'
+    id = db1.Column(Integer, primary_key=True)
+    placeName = db1.Column(String)
+    address = db1.Column(String)
+    numPeople = db1.Column(Integer)
+    socialDistanceRating = db1.Column(Integer)
+    maskComplianceRating = db1.Column(Integer)
+    openSpace = db1.Column(Boolean)
+    riskScore = db1.Column(Float)
+    createdById = db1.Column(Integer)
+    checkInDate = db1.Column(DateTime)
+    checkOutDate = db1.Column(DateTime)
+    updatedDate = db1.Column(DateTime)
+
+    def __init__(self, placeName, address, numPeople, socialDistanceRating, maskComplianceRating, openSpace, riskScore, createdById, checkInDate, checkOutDate, updatedDate):
+        self.placeName = placeName 
+        self.address = address
+        self.numPeople = numPeople
+        self.socialDistanceRating = socialDistanceRating
+        self.maskComplianceRating = maskComplianceRating
+        self.openSpace = openSpace
+        self.riskScore = riskScore
+        self.createdById = createdById
+        self.checkInDate = checkInDate
+        self.checkOutDate = checkOutDate
+        self.updatedDate = updatedDate
+
+    def __repr__(self):
+        return f"<Event {self.placeName} {self.address} {self.numPeople}>"
 
 @app1.route('/')
 def hello_world():
