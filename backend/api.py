@@ -201,7 +201,10 @@ def handle_user():
     else:
         return {"error": "The request Method is not valid. Expecting a POST Request"}
 
- 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter_by(email=user_id).first()
+
 if __name__ == '__main__':
     from event_route import event
     from user_route import user
@@ -214,7 +217,3 @@ if __name__ == '__main__':
     app1.register_blueprint(event_scoring)
     app1.register_blueprint(user_scoring)
     app1.run(debug=True)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.filter_by(email=user_id).first()
