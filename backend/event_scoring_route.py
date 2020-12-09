@@ -3,7 +3,7 @@ from api import db1, Relationship, User, Event
 
 event_scoring = Blueprint('event_scoring', __name__)
 
-@event_scoring.route('/helloScoring')
+@event_scoring.route('/helloEventScoring')
 def hello():
     return "Hello Scoring"
 
@@ -17,6 +17,7 @@ def getScoreForEventId():
         mask_comp_w = 1.4
         people_w = 1.2
         eventScore = calculateEventScore(event, social_dist_w, mask_comp_w, people_w)
+
     else:
         social_dist_w = 1.35
         mask_comp_w = 1.35
@@ -28,6 +29,36 @@ def getScoreForEventId():
 def calculateEventScore(event, social_dist_w, mask_comp_w, people_w):
     denom = social_dist_w + mask_comp_w + people_w
     print(f"scoring as openSpace: {event.openSpace} socialDistanceRating: {event.socialDistanceRating} maskComplianceRating: {event.maskComplianceRating} numPeople: {event.numPeople}")
+    event_score = ((social_dist_w * (6 - event.socialDistanceRating)) + (mask_comp_w * (6 - event.maskComplianceRating)) + (people_w * event.numPeople)) / denom
+    additional_risk = calculateAdditionalRisk(event, event_score)
+    
+    print(f"event_score: {event_score} additional_risk: {additional_risk}")
+    return event_score + additional_risk
 
-    return ((social_dist_w * (6 - event.socialDistanceRating)) + (mask_comp_w * (6 - event.maskComplianceRating)) + (people_w * event.numPeople)) / denom
+def calculateAdditionalRisk(event, event_score):
+    highest_add_risk = 5.0 - event_score
+    switcher={
+            1:5,
+            2:10,
+            3:25,
+            4:100,
+            5:200
+        }
+    max_people = switcher.get(event.numPeople)
+    confirmed_cases = event.confirmedCases
+    if(confirmed_cases is None):
+        confirmed_cases = 0
+    if(confirmed_cases > max_people):
+        confirmed_cases = max_people
+        
+    cases_pct = confirmed_cases / max_people
+    add_risk = highest_add_risk * cases_pct
+    return add_risk
+
+
+
+
+
+
+
 

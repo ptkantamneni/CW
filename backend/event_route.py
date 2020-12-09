@@ -24,7 +24,8 @@ def createEvent():
             data['createdById'],
             data['checkInDate'],
             data['checkOutDate'],
-            data['updatedDate']
+            data['updatedDate'],
+            0
             )
 
         db.session.add(event)

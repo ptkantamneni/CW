@@ -100,8 +100,9 @@ class Event(db1.Model):
     checkInDate = db1.Column(DateTime, default=datetime.utcnow)
     checkOutDate = db1.Column(DateTime, default=datetime.utcnow)
     updatedDate = db1.Column(DateTime, default=datetime.utcnow)
+    confirmedCases = db1.Column(Integer, default=0)
 
-    def __init__(self, placeName, address, numPeople, socialDistanceRating, maskComplianceRating, openSpace, riskScore, createdById, checkInDate, checkOutDate, updatedDate):
+    def __init__(self, placeName, address, numPeople, socialDistanceRating, maskComplianceRating, openSpace, riskScore, createdById, checkInDate, checkOutDate, updatedDate, confirmedCases):
         self.placeName = placeName
         self.address = address
         self.numPeople = numPeople
@@ -113,6 +114,7 @@ class Event(db1.Model):
         self.checkInDate = checkInDate
         self.checkOutDate = checkOutDate
         self.updatedDate = updatedDate
+        self.confirmedCases = confirmedCases
 
     def __repr__(self):
         return f"<Event {self.placeName} {self.address} {self.numPeople}>"
@@ -129,7 +131,8 @@ class Event(db1.Model):
             'createdById': self.createdById,
             'checkInDate': self.checkInDate,
             'checkOutDate': self.checkOutDate,
-            'updatedDate': self.updatedDate
+            'updatedDate': self.updatedDate,
+            'confirmedCases': self.confirmedCases
         }
 
 @app1.route('/')
