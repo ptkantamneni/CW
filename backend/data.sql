@@ -2,15 +2,15 @@ TRUNCATE TABLE event;
 TRUNCATE TABLE relationship;
 TRUNCATE TABLE "user";
 
-INSERT INTO "public"."user"("id","firstName","lastName","email","address","age","testResult","testDate","hasSymptoms","symptomsOnSetDate","password")
+INSERT INTO "public"."user"("id","firstName","lastName","email","password","address","age","testResult","testDate","hasSymptoms","symptomsOnSetDate","riskScore")
 VALUES
-(1,E'David',E'Nguyen',E'david@clari.com',E'1655 Tully Rd, San Jose, CA 95122',21,NULL,NULL,TRUE,E'2020-12-05',E'123'),
-(2,E'Phani',E'Kantamneni',E'phani@clari.com',E'2525 S King Rd, San Jose, CA 95122',21,E'FALSE',E'2020-11-25',FALSE,NULL,E'123'),
-(3,E'Divya',E'Narasimhan',E'divya@clari.com',E'1290 Tully Rd suite 50, San Jose, CA 95122',21,NULL,NULL,FALSE,NULL,E'123'),
-(4,E'Aditya',E'Varkhedi',E'aditya@clari.com',E'2055 Summerside Dr, San Jose, CA 95122',21,NULL,NULL,FALSE,NULL,E'123'),
-(5,E'Tony',E'Nguyen',E'tony@gmail.com',E'1710 Tully Rd, San Jose, CA 95122',33,NULL,NULL,FALSE,NULL,E'123'),
-(6,E'Lisa',E'Nguyen',E'lisa@gmail.com',E'1855 Lucretia Ave, San Jose, CA 95122',65,NULL,NULL,FALSE,NULL,E'123'),
-(7,E'Tina',E'Nguyen',E'tina@gmail.com',E'2201 Senter Rd, San Jose, CA 95112',32,NULL,NULL,FALSE,NULL,E'123');
+(1,E'David',E'Nguyen',E'david@clari.com',E'123',E'1655 Tully Rd, San Jose, CA 95122',21,TRUE,E'2020-12-10',TRUE,E'2020-12-05',5),
+(2,E'Phani',E'Kantamneni',E'phani@clari.com',E'123',E'2525 S King Rd, San Jose, CA 95122',21,FALSE,E'2020-11-25',FALSE,NULL,3.3),
+(3,E'Divya',E'Narasimhan',E'divya@clari.com',E'123',E'1290 Tully Rd suite 50, San Jose, CA 95122',21,NULL,NULL,FALSE,NULL,2),
+(4,E'Aditya',E'Varkhedi',E'aditya@clari.com',E'123',E'2055 Summerside Dr, San Jose, CA 95122',21,NULL,NULL,FALSE,NULL,2),
+(5,E'Tony',E'Nguyen',E'tony@gmail.com',E'123',E'1710 Tully Rd, San Jose, CA 95122',33,NULL,NULL,FALSE,NULL,2),
+(6,E'Lisa',E'Nguyen',E'lisa@gmail.com',E'123',E'1855 Lucretia Ave, San Jose, CA 95122',65,NULL,NULL,FALSE,NULL,2),
+(7,E'Tina',E'Nguyen',E'tina@gmail.com',E'123',E'2201 Senter Rd, San Jose, CA 95112',32,NULL,NULL,FALSE,NULL,2);
 
 INSERT INTO "public"."event"("id","placeName","address","numPeople","socialDistanceRating","maskComplianceRating","openSpace","riskScore","createdById","checkInDate","checkOutDate","updatedDate","confirmedCases")
 VALUES

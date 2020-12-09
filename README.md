@@ -25,4 +25,4 @@ as necessary to get updated libraries as the team adds them in.
 The python postgres library for versions python 3.3+ (we are using 3.9) is: https://github.com/tlocke/pg8000
 
 
-
+export FLASK_APP=api.py

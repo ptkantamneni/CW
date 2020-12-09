@@ -38,6 +38,7 @@ class User(UserMixin, db1.Model):
     testDate = db1.Column(Date, nullable=True)
     hasSymptoms = db1.Column(Boolean, nullable=True)
     symptomsOnSetDate = db1.Column(Date, nullable=True)
+    riskScore = db1.Column(Float, default=0.0)
 
     def __init__(self, firstName, lastName, email, password, address, age, hasSymptoms):
         self.firstName = firstName
@@ -53,7 +54,8 @@ class User(UserMixin, db1.Model):
 
     def to_json(self):
         return {"name": self.firstName,
-                "email": self.email}
+                "email": self.email,
+                "riskScore": self.riskScore}
 
     def is_authenticated(self):
         return True
