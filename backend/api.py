@@ -34,7 +34,7 @@ class User(UserMixin, db1.Model):
     password = db1.Column(String)
     address = db1.Column(String)
     age = db1.Column(Integer)
-    testResult = db1.Column(String, nullable=True)
+    testResult = db1.Column(Boolean, nullable=True)
     testDate = db1.Column(Date, nullable=True)
     hasSymptoms = db1.Column(Boolean, nullable=True)
     symptomsOnSetDate = db1.Column(Date, nullable=True)
