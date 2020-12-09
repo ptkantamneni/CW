@@ -9,8 +9,12 @@ def hello():
 
 @event_scoring.route('/event_scoring', methods=['GET'])
 def getScoreForEventId():
-    eventId = request.args.get('eventId')
-    event = db1.session.query(Event).filter_by(id=eventId).first()
+    event_id = request.args.get('eventId')
+    event_score = calculateScoreForEventId(event_id)
+    return {"message": f"Event score for id {event_id} is {event_score}"}
+
+def calculateScoreForEventId(event_id):
+    event = db1.session.query(Event).filter_by(id=event_id).first()
     eventScore = 1.0
     if(event.openSpace):
         social_dist_w = 1.4
@@ -23,15 +27,15 @@ def getScoreForEventId():
         mask_comp_w = 1.35
         people_w = 1.3
         eventScore = calculateEventScore(event, social_dist_w, mask_comp_w, people_w)
-    
-    return {"message": f"Event score for id {eventId} is {eventScore}"}    
+
+    return round(eventScore,3)
 
 def calculateEventScore(event, social_dist_w, mask_comp_w, people_w):
     denom = social_dist_w + mask_comp_w + people_w
     print(f"scoring as openSpace: {event.openSpace} socialDistanceRating: {event.socialDistanceRating} maskComplianceRating: {event.maskComplianceRating} numPeople: {event.numPeople}")
     event_score = ((social_dist_w * (6 - event.socialDistanceRating)) + (mask_comp_w * (6 - event.maskComplianceRating)) + (people_w * event.numPeople)) / denom
     additional_risk = calculateAdditionalRisk(event, event_score)
-    
+
     print(f"event_score: {event_score} additional_risk: {additional_risk}")
     return event_score + additional_risk
 
@@ -50,14 +54,10 @@ def calculateAdditionalRisk(event, event_score):
         confirmed_cases = 0
     if(confirmed_cases > max_people):
         confirmed_cases = max_people
-        
+
     cases_pct = confirmed_cases / max_people
     add_risk = highest_add_risk * cases_pct
     return add_risk
-
-
-
-
 
 
 
