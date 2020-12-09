@@ -7,16 +7,12 @@ from flask_login import (LoginManager,
                          login_required, UserMixin, current_user)
 
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
-import user_route
-import relationship_route
-import event_route
 
+# import event_route
+    
 app1 = Flask(__name__)
 
 cors = CORS(app1)
-app1.register_blueprint(event_route.event)
-app1.register_blueprint(user_route.user)
-app1.register_blueprint(relationship_route.relationship)
 
 #db initialization - don't change the order
 app1.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://newuser:12345@localhost:5432/covidwatchers"
@@ -84,7 +80,7 @@ class Event(db1.Model):
     updatedDate = db1.Column(DateTime)
 
     def __init__(self, placeName, address, numPeople, socialDistanceRating, maskComplianceRating, openSpace, riskScore, createdById, checkInDate, checkOutDate, updatedDate):
-        self.placeName = placeName
+        self.placeName = placeName 
         self.address = address
         self.numPeople = numPeople
         self.socialDistanceRating = socialDistanceRating
@@ -150,6 +146,12 @@ def handle_user():
 
  
 if __name__ == '__main__':
+    from event_route import event
+    from user_route import user
+    from relationship_route import relationship
+    app1.register_blueprint(event)
+    app1.register_blueprint(user)
+    app1.register_blueprint(relationship)
     app1.run(debug=True)
 
 @login_manager.user_loader
