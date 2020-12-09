@@ -1,4 +1,4 @@
-backend/venv
+venv
 .gitignore
 .vscode
 __pycache__

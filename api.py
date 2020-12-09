@@ -9,7 +9,7 @@ from flask_login import (LoginManager,
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
 from datetime import datetime
 
-app1 = Flask(__name__)
+app1 = Flask(__name__, template_folder='template')
 
 cors = CORS(app1)
 
