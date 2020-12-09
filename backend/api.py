@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, Date, Boolean, Float, DateTime
@@ -8,6 +9,7 @@ import event_route
     
 app1 = Flask(__name__)
 
+cors = CORS(app1)
 db1 = SQLAlchemy()
 db1.init_app(app1)
 app1.register_blueprint(event_route.event)
@@ -108,17 +110,19 @@ def hello_world():
 
 @app1.route('/signup', methods=['POST'])
 def handle_user():
-    if request.method == 'POST':
-        if request.is_json:
-            data = request.get_json()
-            user = User(firstName=data['firstName'], lastName=data['lastName'], email=data['email'],
+    try: 
+        if request.method == 'POST':
+            if request.is_json:
+                data = request.get_json()
+                user = User(firstName=data['firstName'], lastName=data['lastName'], email=data['email'],
                         address=data['address'], age=data['age'])
-            db1.session.add(user)
-            db1.session.commit()
-            return {"message": f"User {user.firstName} has been created successfully."}
-        else:
-            return {"error": "The request payload is not in JSON format"}
-
+                db1.session.add(user)
+                db1.session.commit()
+                return {"message": f"User {user.firstName} has been created successfully."}
+            else:
+                return {"error": "The request payload is not in JSON format"}
+    except Exception as e:
+        print(e)
  
 if __name__ == '__main__':
     app1.run(debug=True)
