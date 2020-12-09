@@ -20,14 +20,24 @@ $( document ).ready(function() {
 	});
 
 	$("#signup-button").click(function(){
+
+		var payload = { "firstName":  $("#first_name").val(), 
+				"lastName":   $("#last_name").val(),
+				"age": $("#age").val(),
+				"address": $("#address").val(),
+				"email": $("#email").val(),
+				"password": $("#password").val() }	
+
+
+		console.log(JSON.stringify(payload));
+
 		$.ajax({
 			'url' : 'http://localhost:5000/signup',
 			'type' : 'POST',
-			'data' : {
-			    'numberOfWords' : 10
-			},
+			 contentType: 'application/json',
+			'data': JSON.stringify(payload),
 			'success' : function(data) {              
-			    alert('Data: '+data);
+				console.log("data" + JSON.stringify(data));
 			},
 			'error' : function(request,error)
 			{
