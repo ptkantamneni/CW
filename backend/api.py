@@ -169,6 +169,11 @@ def logout():
     return jsonify(**{'result': 200,
                       'data': {'message': 'User is successfully logged out'}})
 
+@app1.route('/render-home', methods=['GET'])
+def render_home():
+    if request.method == 'GET':
+        return render_template('home.html')
+
 @app1.route('/user_info', methods=['GET'])
 def user_info():
     if current_user.is_authenticated:
