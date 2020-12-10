@@ -27,7 +27,7 @@ def createEvent():
             data['numPeople'],
             data['socialDistanceRating'],
             data['maskComplianceRating'],
-            data['openSpace'],
+            bool(data['openSpace']),
             1,
             user_id,
             data['checkInDate'],
