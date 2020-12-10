@@ -41,7 +41,7 @@ def createEvent():
 
         # get event score 
         event_score = event_scoring_route.calculateScoreForEventId(event.id)
-        event_to_update = Event.query.filter_by(id=event.id).update({'riskScore': new_score})
+        event_to_update = Event.query.filter_by(id=event.id).update({'riskScore': event_score})
         db.session.commit()
 
         user_route.updateUserScore(user_id)
@@ -52,9 +52,11 @@ def createEvent():
 
 @event.route('/get_event', methods = ['GET'])
 def getEvent():
+    user_id = authUser()
     if(request.method == 'GET'):
-        event = Event.query.filter_by(id=request.args.get('id', default=-1)).first()
-        return {} if event is None else jsonify(event.serialize())
+        #event = Event.query.filter_by(id=request.args.get('id', default=-1)).first()
+        events = Event.query.filter_by(createdById=user_id).order_by(Event.checkInDate.desc())
+        return {} if events is None else jsonify([event.serialize() for event in events])
 
     return 'SWWE'
 
