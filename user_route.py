@@ -5,14 +5,14 @@ from datetime import datetime, timedelta
 import user_scoring_route
 import event_route
 
-user = Blueprint('user', __name__)
+user = Blueprint('user', __name__, url_prefix = '/user')
 
 @user.route('/helloUser')
 def hello():
     return "Hello User"
 
 
-@user.route('/user/updateScore', methods = ['POST'])
+@user.route('/updateScore', methods = ['POST'])
 def updateScore():
     user_id = request.args.get('userId')
     return updateUserScore(user_id)
@@ -25,7 +25,7 @@ def updateUserScore(user_id):
     return f"updated user_score: {user_score}"
 
 
-@user.route('/user/addTestResult', methods = ['POST'])
+@user.route('/addTestResult', methods = ['POST'])
 def addTestResult():
     user_id = request.args.get('userId')
     test_result = bool(request.args.get('testResult'))

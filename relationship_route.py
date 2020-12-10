@@ -1,19 +1,19 @@
 from flask import Blueprint, request, jsonify
 from api import db1, Relationship, User
 
-relationship = Blueprint('relationship', __name__)
+relationship = Blueprint('relationship', __name__, url_prefix = '/relationship')
 
 @relationship.route('/helloRelationship')
 def hello():
     return "Hello Relationship"
 
-@relationship.route('/relationship', methods=['GET'])
+@relationship.route('/getRelationship', methods=['GET'])
 def getRelationshipsForEmail():
     user = getUserByEmail(request.args.get('email'))
     relationship_list = db1.session.query(Relationship).filter_by(userId=user.id)
     return jsonify([r.to_json() for r in relationship_list])
 
-@relationship.route('/relationship', methods=['POST'])
+@relationship.route('/addRelationship', methods=['POST'])
 def addRelationshipByEmail():
     if request.method == 'POST':
         if request.is_json:
@@ -34,7 +34,7 @@ def addRelationshipByEmail():
         else:
             return {"error": "The request payload is not in JSON format"}
 
-@relationship.route('/relationship', methods=['DELETE'])
+@relationship.route('/deleteRelationship', methods=['DELETE'])
 def deleteRelationshipByEmail():
     user = getUserByEmail(request.args.get('email'))
 
