@@ -21,6 +21,20 @@ def getRelationshipsForUser():
     relationship_list = db1.session.query(Relationship).filter_by(userId=user_id)
     return jsonify([r.to_json() for r in relationship_list])
 
+@relationship.route('/getFriendsUserInfo', methods=['GET'])
+def getFriendsUserInfo():
+    user_id = authUser()
+    #user = db1.session.query(User).filter_by(id=user_id)
+
+    #user = getUserByEmail(request.args.get('email'))
+    friends = []
+    relationship_list = db1.session.query(Relationship).filter_by(userId=user_id)
+    for r in relationship_list:
+        friend_info = db1.session.query(User).filter_by(id=r.friendId).first()
+        friends.append(friend_info)
+
+    return jsonify([f.to_json() for f in friends])
+
 @relationship.route('/addRelationship', methods=['POST'])
 def addRelationshipByEmail():
     if request.method == 'POST':
@@ -61,3 +75,4 @@ def deleteRelationshipByEmail():
 
 def getUserByEmail(email):
     return db1.session.query(User).filter_by(email=email).first()
+
