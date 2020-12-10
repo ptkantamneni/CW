@@ -46,7 +46,8 @@ $( document ).ready(function() {
 			'type' : 'POST',
 			 contentType: 'application/json',
 			'data': JSON.stringify(payload),
-			'success' : function(data) {              
+			'success' : function(data) {
+				location.reload(true)              
 				console.log("data" + JSON.stringify(data));
 			},
 			'error' : function(request,error)
@@ -68,7 +69,8 @@ $( document ).ready(function() {
 			'type' : 'POST',
 			 contentType: 'application/json',
 			'data': JSON.stringify(payload),
-			'success' : function(data) {              
+			'success' : function(data) {
+				location.reload(true)              
 				console.log("data" + JSON.stringify(data));
 			},
 			'error' : function(request,error)
