@@ -29,6 +29,86 @@ $( document ).ready(function() {
     $("#relationship-type-in-modal").val('');
   });
 
+  	setInterval(function() {
+		 $.ajax({
+			'url' : 'http://localhost:5000/user_info',
+			'type' : 'GET',
+			 contentType: 'application/json',
+			'success' : function(data, code, xhr) {              
+			    console.log('User Info Data: '+ JSON.stringify(data));
+			    var msg = data["message"]
+			    var name = msg["name"]
+			    $("#user-name").text("Name: " + name);
+			    $("#user-age").text("Age: " + msg["age"]);
+			    $("#user-email").text("Email: " + msg["email"]);
+			    
+			    var score = msg["riskScore"];
+			    var severityRank = "";
+			    if(score == 5){
+			    	severityRank = "Covid positive"
+			    }
+			    else if(score >=4){
+			    	severityRank = "High risk"
+			    }
+			    else if(score >=3){
+			    	severityRank = "Moderate risk"
+			    }
+			    else if(score >=2){
+			    	severityRank = "Low risk"
+			    }
+			    else{
+			    	severityRank = "Very low risk"
+			    }
+
+		    	$("#user-risk-score").text("Risk Score: " + msg["riskScore"] + ": " + severityRank);
+			    if( msg["testResult"] !== null){
+			    	$("#user-test-result").text("Test Result: " + msg["testResult"]);
+			    	$("#user-test-date").text("Test Date: " + msg["testDate"]);
+			    }
+			    
+			},
+			'error' : function(request,error)
+			{
+			    console.log("User Info Request: "+JSON.stringify(request));
+			}
+			}); 
+	}, 2000);
+
+	setInterval(function() {
+		 $.ajax({
+			'url' : 'http://localhost:5000/event/get_event',
+			'type' : 'GET',
+			 contentType: 'application/json',
+			'success' : function(data, code, xhr) {              
+			    console.log('User Event Data: '+ JSON.stringify(data));
+		    	$("#user-events").empty();
+			    $.each(data, function(i, event){
+			    	// $("#user-events").append('<li>Event: ' + event["placeName"] + '<br>' + "\n Risk Score: " + event["riskScore"] + '</li>');
+
+			    	$("#user-events").append('<li>Event: ' + event["placeName"] + '<br>');
+			    	$("#user-events").append('Risk Score: ' + event["riskScore"] + '<br>');
+			    	$("#user-events").append('Address: ' + event["address"] + '<br>');
+			    	$("#user-events").append('Confirmed Cases: ' + event["confirmedCases"] + '<br>');
+			    	$("#user-events").append('Open Space: ' + event["openSpace"] + '<br>');
+			    	$("#user-events").append('Number of people rating: ' + event["numPeople"] + '<br>')
+			    	$("#user-events").append('Social Distance Rating: ' + event["socialDistancing"] + '<br>');
+			    	$("#user-events").append('Mask Compliance Rating: ' + event["maskComplianceRating"] + '<br>');
+			    	$("#user-events").append('Check In Date: ' + event["checkInDate"] + '<br>');
+			    	$("#user-events").append('Check Out Date: ' + event["checkOutDate"] + '<br>');
+			    	$("#user-events").append('<b>');
+			    	$("#user-events").append('<b>');
+			    	$("#user-events").append('</li>');
+
+			    	// $("#user-events").append("Event Name: " + event["placeName"] + "\n");
+			    });
+			},
+			'error' : function(request,error)
+			{
+			    console.log("User Info Request: "+JSON.stringify(request));
+			}
+			}); 
+	}, 2000);
+
 
 	$("#save-event-btn").click(function(){
 		var payload = { "placeName" : $("#event-name").val(),

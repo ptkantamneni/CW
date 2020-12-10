@@ -43,7 +43,11 @@ def addTestResult():
     #test_date = request.args.get('testDate')
     data = request.get_json()
 
-    test_result = bool(data['testResult'])
+    test_result = False
+    if(data['testResult'] == 'True' or data['testResult'] == 'true'):
+        test_result = True
+    
+    #test_result = bool(data['testResult'])
     test_date = data['testDate']
     
     db.session.query(User).filter_by(id=user_id).update({'testResult': test_result, 'testDate': test_date})
@@ -51,5 +55,7 @@ def addTestResult():
 
     if test_result is True:
         event_route.updateEventsForUserWithCovid(user_id)
+
+    updateUserScore(user_id)
 
     return f"updated test results"
