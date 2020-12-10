@@ -241,3 +241,6 @@ if __name__ == '__main__':
     app1.register_blueprint(event_scoring)
     app1.register_blueprint(user_scoring)
     app1.run(debug=True)
+
+
+	

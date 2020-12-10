@@ -20,9 +20,7 @@ def hello():
 @event.route('/create_event', methods = ['POST'])
 def createEvent():
 
-    print("here1")
     user_id = authUser()
-    print("here2")
     if(request.method == 'POST' and request.is_json):
         data = request.get_json()
         event = Event(

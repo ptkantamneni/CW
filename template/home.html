@@ -177,6 +177,43 @@
     </div>
 </div>
 </div>
+
+<!-- Relationship Modal -->
+<div class="modal fade" id="relationship-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Relationship</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+   <div class="input-group mb-2">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Relationship email</span>
+      </div>
+     <input type="text" class="form-control" id="relationship-email-in-modal">
+
+    </div>
+    <br>
+      <div class="input-group mb-2">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Relationship Type</span>
+      </div>
+
+     <input type="text" class="form-control" id="relationship-type-in-modal">
+    </div>
+
+  <br>
+  <hr>
+  <button type="button" class="btn btn-primary" id="save-relationship-btn">Save changes</button>
+  <button type="button" class="btn btn-info" id="reset-values-relationship-modal">Reset Values</button>
+      </div>
+    </div>
+</div>
+</div>
  
 
         	<button class="btn btn-primary" type="button" id="create-event-btn" style="margin-right: 10px;" data-toggle="modal" data-target="#event-modal">
@@ -186,6 +223,11 @@
         	<button class="btn btn-warning" type="button" id="add-test-result-btn" data-toggle="modal" data-target="#test-result-modal">
 		Add Test Result
 		</button>
+
+          <button class="btn btn-success" style="margin-left: 10px;" type="button" id="add-relationship-btn" data-toggle="modal" data-target="#relationship-modal">
+    Add Relationship
+    </button>
+
 	</div>
 	
 	<br>
@@ -207,17 +249,72 @@
 	<canvas id="viewport" width="800" height="600"></canvas>
 
 	<script language="javascript" type="text/javascript">
-var sys = arbor.ParticleSystem(1000, 400,1);
+	var friends = new Array();
+	setInterval(function(){ 
+		getData('http://localhost:5000/relationship/getRelationship') 
+	}, 5000);
+			
+			
+			function getData(url) {
+				// // const url1 = 'http://localhost:5000/relationship/getRelationship';
+				// fetch(url)
+				// .then(response => response.json())
+				// .then(json => {
+				// 	// console.log(json);
+				// 	friends.push(json);
+				// 	// document.getElementById("userId").innerHTML = JSON.stringify(json)
+				// });
+
+				$.ajax({
+						'url' : url,
+						'type' : 'GET',
+						contentType: 'application/json',
+						'success' : function(data) {              
+							console.log("data" + JSON.stringify(data));
+							// friends.push(data);
+							window['data']=data;
+						},
+						'error' : function(request,error)
+						{
+							alert("Request: "+JSON.stringify(request));
+						}
+					}); 
+			}
+
+			const colors = ['red', 'green', 'blue', 'yellow'];
+			var color = colors[Math.floor(Math.random() * colors.length)];
+			console.log(color);
+			var friends = getData('http://localhost:5000/relationship/getRelationship');
+			setInterval(function() 
+			{
+				console.log(window['data']);
+			}, 1000);
+			friendsData = [];
+			nodesTmp = {};
+			edgesTmp = {};
+
+			// friends.foreach(fetchFriendsData);
+
+			// for(i=0;i<friends.length;i++)
+			// {
+			// 	data = getData('http://localhost:5000/user/getUserById?uid=' + friends[i]['friendId']);
+			// 	friendsData.push({'key': data['name'], 'value': data['riskScore']});
+			// }
+
+			// console.log(friendsData);
+
+			var sys = arbor.ParticleSystem(1000, 400,1);
             sys.parameters({gravity:true});
-            sys.renderer = Renderer("#viewport") ;
+            sys.renderer = Renderer("#viewport");
             var data = {
-               nodes:{
-                 me:{'color':'red','shape':'dot','label':'Aditya'},
-                 person1:{'color':'green','shape':'dot','label':'person1'},
-                 person2:{'color':'blue','shape':'dot','label':'person2'}
-               }, 
+				
+               	nodes: {
+					me:{'color':'red','shape':'dot','label':'phani'},
+					person1:{'color':'green','shape':'dot','label':'person1'},
+					person2:{'color':'blue','shape':'dot','label':'person2'}
+				}, 
                edges:{
-                 me:{ person1:{}, person2:{} }
+                 	me:{ person1:{}, person2:{} }
                }
              };
             sys.graft(data);

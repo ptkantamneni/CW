@@ -17,6 +17,10 @@ def hello():
     user_id = authUser()
     return f"Hello User {user_id}"
 
+@user.route('getUserById', methods = ['GET'])
+def getUserForId():
+    return db.session.query(User).filter_by(id=request.args.get('uid')).first().to_json()
+
 
 @user.route('/updateScore', methods = ['POST'])
 def updateScore():
