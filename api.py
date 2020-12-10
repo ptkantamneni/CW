@@ -54,8 +54,16 @@ class User(UserMixin, db1.Model):
         return f"<User {self.name}>"
 
     def to_json(self):
-        return {"name": self.firstName,
+        return {"id": self.id,
+                "name": self.firstName,
+                "lastName": self.lastName,
                 "email": self.email,
+                "address": self.address,
+                "age": self.age,
+                "testResult": self.testResult,
+                "testDate": self.testDate,
+                "hasSymptoms": self.hasSymptoms,
+                "symptomsOnSetDate": self.symptomsOnSetDate,
                 "riskScore": self.riskScore}
 
     def is_authenticated(self):
