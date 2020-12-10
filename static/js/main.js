@@ -17,19 +17,20 @@ $( document ).ready(function() {
 			'success' : function(data, code, xhr) {              
 			    console.log('Log in Data: '+ data);
 		            console.log("Log in cookie: " + JSON.stringify(code));
-		         $.ajax({
-			'url' : 'http://localhost:5000/user_info',
-			'type' : 'GET',
-			 contentType: 'application/json',
-			'data' : JSON.stringify(payload),
-			'success' : function(data, code, xhr) {              
-			    console.log('User Info Data: '+ JSON.stringify(data));
-			},
-			'error' : function(request,error)
-			{
-			    alert("User Info Request: "+JSON.stringify(request));
-			}
-		});    
+				 $.ajax({
+				'url' : 'http://localhost:5000/user_info',
+				'type' : 'GET',
+				 contentType: 'application/json',
+				'data' : JSON.stringify(payload),
+				'success' : function(data, code, xhr) {              
+				    console.log('User Info Data: '+ JSON.stringify(data));
+				    window.location.replace("http://localhost:5000/render-home");	
+				},
+				'error' : function(request,error)
+				{
+				    console.log("User Info Request: "+JSON.stringify(request));
+				}
+				});    
 			},
 			'error' : function(request,error)
 			{
