@@ -1,7 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from api import db1, Relationship, User, Event
 
 event_scoring = Blueprint('event_scoring', __name__, url_prefix = '/score')
+
+def authUser():
+    if not "userId" in session:
+        raise Exception("User not authenticated")
+    return session["userId"]
 
 @event_scoring.route('/helloEventScoring')
 def hello():

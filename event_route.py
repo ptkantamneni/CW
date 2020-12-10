@@ -1,5 +1,5 @@
 # CRUD operations for events
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from api import db1 as db, Event, User
 from datetime import datetime, timedelta
 import event_scoring_route
@@ -7,13 +7,18 @@ import user_route
 
 event = Blueprint('event', __name__, url_prefix = '/event')
 
+def authUser():
+    if not "userId" in session:
+        raise Exception("User not authenticated")
+    return session["userId"]
+
 @event.route('/hello_event')
 def hello():
     return "Hello Event"
 
-
 @event.route('/create_event', methods = ['POST'])
 def createEvent():
+    user_id = authUser()
     if(request.method == 'POST' and request.is_json):
         data = request.get_json()
         event = Event(
@@ -23,8 +28,8 @@ def createEvent():
             data['socialDistanceRating'],
             data['maskComplianceRating'],
             data['openSpace'],
-            data['riskScore'],
-            data['createdById'],
+            1,
+            user_id,
             data['checkInDate'],
             data['checkOutDate'],
             data['updatedDate'],
@@ -33,6 +38,13 @@ def createEvent():
 
         db.session.add(event)
         db.session.commit()
+
+        # get event score 
+        event_score = event_scoring_route.calculateScoreForEventId(event.id)
+        event_to_update = Event.query.filter_by(id=event.id).update({'riskScore': new_score})
+        db.session.commit()
+
+        user_route.updateUserScore(user_id)
         return "Successfully created event"
     
     return "SWWE"
@@ -79,7 +91,8 @@ def getAllEventsAtAddressBetweenTime():
 
 @event.route('/updateAllEventsScoreAffectedUser', methods = ['POST'])
 def updateAffectedEvents():
-    user_id = request.args.get('userId')
+    #user_id = request.args.get('userId')
+    user_id = authUser()
     updateEventsForUserWithCovid(user_id)
 
     return "Updated event scores success"

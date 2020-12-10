@@ -1,8 +1,13 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from api import db1 as db, User, Event
 from datetime import datetime, timedelta
 
 user_scoring = Blueprint('user_scoring', __name__, url_prefix = '/score')
+
+def authUser():
+    if not "userId" in session:
+        raise Exception("User not authenticated")
+    return session["userId"]
 
 @user_scoring.route('/hello_user_scoring')
 def hello():
@@ -10,9 +15,10 @@ def hello():
 
 @user_scoring.route('/user_scoring', methods = ['GET'])
 def getScoreForUserId():
+    user_id = authUser()
     if(request.method == 'GET'):
-        userId = request.args.get('userId')
-        user_score = calculateScoreForId(userId)
+        #userId = request.args.get('userId')
+        user_score = calculateScoreForId(user_id)
         return {"userScore": user_score}
 
     return 'SWWE'

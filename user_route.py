@@ -1,5 +1,5 @@
 # CRUD operations for events
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from api import db1 as db, Event, User
 from datetime import datetime, timedelta
 import user_scoring_route
@@ -7,14 +7,20 @@ import event_route
 
 user = Blueprint('user', __name__, url_prefix = '/user')
 
+def authUser():
+    if not "userId" in session:
+        raise Exception("User not authenticated")
+    return session["userId"]
+
 @user.route('/helloUser')
 def hello():
-    return "Hello User"
+    user_id = authUser()
+    return f"Hello User {user_id}"
 
 
 @user.route('/updateScore', methods = ['POST'])
 def updateScore():
-    user_id = request.args.get('userId')
+    user_id = authUser()
     return updateUserScore(user_id)
 
 def updateUserScore(user_id):
@@ -27,7 +33,8 @@ def updateUserScore(user_id):
 
 @user.route('/addTestResult', methods = ['POST'])
 def addTestResult():
-    user_id = request.args.get('userId')
+    #user_id = request.args.get('userId')
+    user_id = authUser()
     test_result = bool(request.args.get('testResult'))
     test_date = request.args.get('testDate')
     
