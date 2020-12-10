@@ -15,12 +15,25 @@ $( document ).ready(function() {
 			 contentType: 'application/json',
 			'data' : JSON.stringify(payload),
 			'success' : function(data, code, xhr) {              
-			    console.log('Data: '+ data);
-		            console.log("cookie: " + JSON.stringify(code));
+			    console.log('Log in Data: '+ data);
+		            console.log("Log in cookie: " + JSON.stringify(code));
+		         $.ajax({
+			'url' : 'http://localhost:5000/user_info',
+			'type' : 'GET',
+			 contentType: 'application/json',
+			'data' : JSON.stringify(payload),
+			'success' : function(data, code, xhr) {              
+			    console.log('User Info Data: '+ JSON.stringify(data));
 			},
 			'error' : function(request,error)
 			{
-			    alert("Request: "+JSON.stringify(request));
+			    alert("User Info Request: "+JSON.stringify(request));
+			}
+		});    
+			},
+			'error' : function(request,error)
+			{
+			    alert("Log in Request: "+JSON.stringify(request));
 			}
 		});    
 	});
