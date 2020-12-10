@@ -35,8 +35,12 @@ def updateUserScore(user_id):
 def addTestResult():
     #user_id = request.args.get('userId')
     user_id = authUser()
-    test_result = bool(request.args.get('testResult'))
-    test_date = request.args.get('testDate')
+    #test_result = bool(request.args.get('testResult'))
+    #test_date = request.args.get('testDate')
+    data = request.get_json()
+
+    test_result = bool(data['testResult'])
+    test_date = data['testDate']
     
     db.session.query(User).filter_by(id=user_id).update({'testResult': test_result, 'testDate': test_date})
     db.session.commit()
