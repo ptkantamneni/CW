@@ -244,7 +244,7 @@
 	
 </div>
 
-<div class="col-lg-4">
+<div class="col-lg-8">
 
 	<canvas id="viewport" width="800" height="600"></canvas>
 
@@ -253,11 +253,11 @@
 	setInterval(function(){ 
 		getRelationshipData('http://localhost:5000/relationship/getRelationship'); 
 		getSeverityLevelData();
-	}, 10000);
+	}, 1000);
 	
-	setInterval(function(){ 
+	setTimeout(function(){ 
 		updateGraph();
-	}, 13000);
+	}, 3000);
 		
 	function getRelationshipData(url) {
 		$.ajax({
@@ -288,8 +288,8 @@
 			}
 		}); 
 	}
-
-	function updateGraph(data) {
+	
+	function updateGraph(data, myAddedNode) {
 	
 			var relationshipData = window['relationshipData'];
 			var severityLevelData = window['severityLevelData'];
@@ -297,11 +297,12 @@
 			//console.log("RelationshipData: " + JSON.stringify(relationshipData));
 			//console.log("severityLevelData: " + JSON.stringify(severityLevelData));
 
-			generatedNodes = []
-			
 			var sys = arbor.ParticleSystem(1000, 400,1);
 			myNode = { 'color': 'green', 'shape': 'dot', 'label': 'Me' }
 			var myAddedNode = sys.addNode('me', myNode);
+	
+			generatedNodes = []
+			
 			relationshipData.forEach(function(entry) {
 				var obj = severityLevelData.filter(obj => {
 					return obj.id == entry['friendId'];
@@ -320,39 +321,22 @@
 					colorValue = 'brown';
 				}
 				else if ( score  >= 3) {
-					colorValue = 'orange';
+					colorValue = 'orangered';
 				}
 				else if ( score >= 2) {
-					colorValue = 'yellow'
+					colorValue = 'orange'
 				}
 
 				console.log('score: ' + score);
 				console.log('colorValue: ' + colorValue);
-				node = { 'color':  colorValue, 'shape': 'dot', 'label': obj[0]['name'] + ' Risk-Score: ' + obj[0]['riskScore'] } 
+				node = { 'color':  colorValue, 'shape': 'dot', 'label': obj[0]['name'] + ' Risk: ' + obj[0]['riskScore'] } 
 				console.log("node added: " + JSON.stringify(node));
-				generatedNodes.push(node);
+				var addedNode = sys.addNode(obj[0]['name'], node);
+				sys.addEdge(myAddedNode, addedNode);
 			});
 	
-			var sys = arbor.ParticleSystem(1000, 400,1);
 		    	sys.parameters({gravity:true});
 		    	sys.renderer = Renderer("#viewport");
-		    	console.log('gneerated nodes: ' + generatedNodes.length);
-
-			
-
-
-			var returnValuesForNodes = []
-			for (i = 0; i < generatedNodes.length; i++) {
-			     sys.addNode(i.toString(), generatedNodes[i]);
-			} 
-
-			//console.log('returnvalueslist +'  + JSON.stringify(returnValuesForNodes));
-
-			//for(i = 0; i < returnValuesForNodes.length; i++) {
-				//sys.addEdge(myAddedNode, returnValuesForNodes[0]);
-			//}
-			
-			sys.graft(data);
 		}
     </script>
 	
