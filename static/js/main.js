@@ -4,13 +4,68 @@ $( document ).ready(function() {
 
 
 	$("#reset-values-event-modal").click(function(){
-
 		console.log("reset called.");
 		$("#event-name").val('');
 		$("#event-address").val('');
 		$("#event-attendee-count").val('');
 		$("#social-distance-rating").val('');
 		$("#mask-compliance-rating").val('');
+	});
+
+	$("#reset-values-test-result-modal").click(function(){
+		console.log("reset2` called.");
+		$("#test-result-in-modal").val('');
+		$("#test-date-in-modal").val('');
+	});
+
+
+
+	$("#save-event-btn").click(function(){
+		var payload = { "firstName":  $("#first_name").val(), 
+				"lastName":   $("#last_name").val(),
+				"age": $("#age").val(),
+				"address": $("#address").val(),
+				"email": $("#email").val(),
+				"password": $("#password").val() }	
+
+
+		console.log(JSON.stringify(payload));
+
+		$.ajax({
+			'url' : 'http://localhost:5000/signup',
+			'type' : 'POST',
+			 contentType: 'application/json',
+			'data': JSON.stringify(payload),
+			'success' : function(data) {              
+				console.log("data" + JSON.stringify(data));
+			},
+			'error' : function(request,error)
+			{
+			    alert("Request: "+JSON.stringify(request));
+			}
+		});    
+	});
+
+
+	$("#save-test-result-btn").click(function(){
+		var payload = { "testResult":  $("#test-result-in-modal").val(), 
+				"testDate":   $("#test-date-in-modal").val()}
+
+		console.log(JSON.stringify(payload));
+
+		$.ajax({
+			'url' : 'http://localhost:5000/user/addTestResult',
+			'type' : 'POST',
+			 contentType: 'application/json',
+			'data': JSON.stringify(payload),
+			'success' : function(data) {              
+				console.log("data" + JSON.stringify(data));
+			},
+			'error' : function(request,error)
+			{
+			    alert("Request: "+JSON.stringify(request));
+			}
+		});    
 	});
 
 	$("#login-button").click(function(){
