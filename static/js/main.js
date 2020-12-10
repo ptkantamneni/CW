@@ -2,6 +2,17 @@
 $( document ).ready(function() {
     console.log( "ready!" );
 
+
+	$("#reset-values-event-modal").click(function(){
+
+		console.log("reset called.");
+		$("#event-name").val('');
+		$("#event-address").val('');
+		$("#event-attendee-count").val('');
+		$("#social-distance-rating").val('');
+		$("#mask-compliance-rating").val('');
+	});
+
 	$("#login-button").click(function(){
 
 		var payload = { "username": $("#email-login").val(),
