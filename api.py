@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS, cross_origin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -67,8 +67,8 @@ class User(UserMixin, db1.Model):
     def is_anonymous(self):
         return False
 
-    def get_id(self):
-        return str(self.email)
+    #def get_id(self):
+        #return self.id
 
 class Relationship(db1.Model):
     __tablename__ = 'relationship'
@@ -157,6 +157,8 @@ def login():
         password = data['password']
         user = User.query.filter_by(email=email).first()
         if user and user.password == password:
+           session["userName"] = email
+           session["userId"] = user.id
            login_user(user)
            resp = jsonify(user.to_json())
            resp.headers['Access-Control-Allow-Credentials'] = 'true'
@@ -168,6 +170,8 @@ def login():
 
 @app1.route('/logout', methods=['GET'])
 def logout():
+    session.pop('userName', None)
+    session.pop('userId', None)
     logout_user()
     return jsonify(**{'result': 200,
                       'data': {'message': 'User is successfully logged out'}})
@@ -179,9 +183,14 @@ def render_home():
 
 @app1.route('/user_info', methods=['GET'])
 def user_info():
-    if current_user.is_authenticated:
-        resp = {"result": 200,
+    if "userName" in session and current_user.is_authenticated:
+        userEmail = session["userName"]
+        if(userEmail == current_user.email):
+          resp = {"result": 200,
                 "message": current_user.to_json()}
+        else:
+          resp = {"result": 401,
+                "message": f" user with userName: {userEmail} has not logged in. Please log in to continue"}
     else:
         resp = {"result": 401,
                 "message": "Log in to access User info"}
@@ -192,14 +201,16 @@ def handle_user():
     if request.method == 'POST':
         if request.is_json:
             data = request.get_json()
+            email = data['email']
+            existingUser = User.query.filter_by(email=email).first()
+            if existingUser:
+                return {"error": "The user name already exists. Please log in to continue"}
             user = User(firstName=data['firstName'], lastName=data['lastName'], email=data['email'],
                         address=data['address'], age=data['age'], password=data['password'], hasSymptoms=data['hasSymptoms'])
             db1.session.add(user)
             db1.session.commit()
-            
             #calculate user score and update
             user_route.updateUserScore(user.id)
-
             return {"message": f"User {user.firstName} has been created successfully."}
         else:
             return {"error": "The request payload is not in JSON format"}
