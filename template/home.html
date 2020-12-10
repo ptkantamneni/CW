@@ -251,89 +251,110 @@
 	<script language="javascript" type="text/javascript">
 	var friends = new Array();
 	setInterval(function(){ 
-		getData('http://localhost:5000/relationship/getRelationship') 
-	}, 5000);
-			
-			
-			function getData(url) {
-				// // const url1 = 'http://localhost:5000/relationship/getRelationship';
-				// fetch(url)
-				// .then(response => response.json())
-				// .then(json => {
-				// 	// console.log(json);
-				// 	friends.push(json);
-				// 	// document.getElementById("userId").innerHTML = JSON.stringify(json)
-				// });
-
-				$.ajax({
-						'url' : url,
-						'type' : 'GET',
-						contentType: 'application/json',
-						'success' : function(data) {              
-							console.log("data" + JSON.stringify(data));
-							// friends.push(data);
-							window['data']=data;
-						},
-						'error' : function(request,error)
-						{
-							alert("Request: "+JSON.stringify(request));
-						}
-					}); 
-			}
-
-			const colors = ['red', 'green', 'blue', 'yellow'];
-			var color = colors[Math.floor(Math.random() * colors.length)];
-			console.log(color);
-			var friends = getData('http://localhost:5000/relationship/getRelationship');
-			setInterval(function() 
+		getRelationshipData('http://localhost:5000/relationship/getRelationship'); 
+		getSeverityLevelData();
+	}, 10000);
+	
+	setInterval(function(){ 
+		updateGraph();
+	}, 13000);
+		
+	function getRelationshipData(url) {
+		$.ajax({
+			'url' : url,
+			'type' : 'GET',
+			contentType: 'application/json',
+			'success' : function(data) {              
+				window['relationshipData']=data;
+			},
+			'error' : function(request,error)
 			{
-				console.log(window['data']);
-			}, 1000);
-			friendsData = [];
-			nodesTmp = {};
-			edgesTmp = {};
+				console.log("Request: "+JSON.stringify(request));
+			}
+		}); 
+	}
 
-			// friends.foreach(fetchFriendsData);
+	function getSeverityLevelData(url) {
+		$.ajax({
+			'url' : 'http://localhost:5000/relationship/getFriendsUserInfo',
+			'type' : 'GET',
+			contentType: 'application/json',
+			'success' : function(data) {              
+				window['severityLevelData']=data;
+			},
+			'error' : function(request,error)
+			{
+				console.log("Request: "+JSON.stringify(request));
+			}
+		}); 
+	}
 
-			// for(i=0;i<friends.length;i++)
-			// {
-			// 	data = getData('http://localhost:5000/user/getUserById?uid=' + friends[i]['friendId']);
-			// 	friendsData.push({'key': data['name'], 'value': data['riskScore']});
-			// }
+	function updateGraph(data) {
+	
+			var relationshipData = window['relationshipData'];
+			var severityLevelData = window['severityLevelData'];
 
-			// console.log(friendsData);
+			//console.log("RelationshipData: " + JSON.stringify(relationshipData));
+			//console.log("severityLevelData: " + JSON.stringify(severityLevelData));
 
+			generatedNodes = []
+			
 			var sys = arbor.ParticleSystem(1000, 400,1);
-            sys.parameters({gravity:true});
-            sys.renderer = Renderer("#viewport");
-            var data = {
+			myNode = { 'color': 'green', 'shape': 'dot', 'label': 'Me' }
+			var myAddedNode = sys.addNode('me', myNode);
+			relationshipData.forEach(function(entry) {
+				var obj = severityLevelData.filter(obj => {
+					return obj.id == entry['friendId'];
+				});
 				
-               	nodes: {
-					me:{'color':'red','shape':'dot','label':'phani'},
-					person1:{'color':'green','shape':'dot','label':'person1'},
-					person2:{'color':'blue','shape':'dot','label':'person2'}
-				}, 
-               edges:{
-                 	me:{ person1:{}, person2:{} }
-               }
-             };
-            sys.graft(data);
-            setTimeout(function(){
-                        var postLoadData = {
-                           nodes:{
-                             person3:{'color':'orange','shape':'dot','label':'person3'},
-                             person4:{'color':'green','shape':'dot','label':'person4'},
-                             person5:{'color':'blue','shape':'dot','label':'person5'}
-                           }, 
-                           edges:{
-                                person1:{ person3:{} },
-                                person2:{ person4:{} },
-                                person3:{ person4:{},person5:{} }
-                           }
-                         };
-                         sys.graft(postLoadData);
-                    },1000);	
-	</script>
+				console.log('this severity object: ' + JSON.stringify(obj));
+				var colorValue = 'green';
+
+				var score = parseInt(obj[0]['riskScore']);
+				if ( score == 5)
+				{
+					colorValue = 'red';
+				}
+				else if ( score >= 4) {
+
+					colorValue = 'brown';
+				}
+				else if ( score  >= 3) {
+					colorValue = 'orange';
+				}
+				else if ( score >= 2) {
+					colorValue = 'yellow'
+				}
+
+				console.log('score: ' + score);
+				console.log('colorValue: ' + colorValue);
+				node = { 'color':  colorValue, 'shape': 'dot', 'label': obj[0]['name'] + ' Risk-Score: ' + obj[0]['riskScore'] } 
+				console.log("node added: " + JSON.stringify(node));
+				generatedNodes.push(node);
+			});
+	
+			var sys = arbor.ParticleSystem(1000, 400,1);
+		    	sys.parameters({gravity:true});
+		    	sys.renderer = Renderer("#viewport");
+		    	console.log('gneerated nodes: ' + generatedNodes.length);
+
+			
+
+
+			var returnValuesForNodes = []
+			for (i = 0; i < generatedNodes.length; i++) {
+			     sys.addNode(i.toString(), generatedNodes[i]);
+			} 
+
+			//console.log('returnvalueslist +'  + JSON.stringify(returnValuesForNodes));
+
+			//for(i = 0; i < returnValuesForNodes.length; i++) {
+				//sys.addEdge(myAddedNode, returnValuesForNodes[0]);
+			//}
+			
+			sys.graft(data);
+		}
+    </script>
 	
 </div>
 
