@@ -95,9 +95,44 @@
 		 <input type="number" class="form-control" id="mask-compliance-rating">
 		</div>
 
+		<br>
+			<div class="input-group mb-2" style="width: 100px;">
+  		<div class="input-group-prepend">
+    			<span class="input-group-text" id="basic-addon1">Check In Date</span>
+  		</div>
+
+		 <input type="text" class="form-control" id="check-in-date">
+		</div>
+		
+		<br>
+			<div class="input-group mb-2" style="width: 100px;">
+  		<div class="input-group-prepend">
+    			<span class="input-group-text" id="basic-addon1">Check Out Date</span>
+  		</div>
+
+		 <input type="text" class="form-control" id="check-out-date">
+		</div>
+	
+         	<br>
+			<div class="input-group mb-2" style="width: 100px;">
+  		<div class="input-group-prepend">
+    			<span class="input-group-text" id="basic-addon1">Open Space</span>
+  		</div>
+
+		 <input type="text" class="form-control" id="open-space">
+		</div>
+	
+ 		<br>
+			<div class="input-group mb-2" style="width: 100px;">
+  		<div class="input-group-prepend">
+    			<span class="input-group-text" id="basic-addon1">Update Date</span>
+  		</div>
+
+		<input type="text" class="form-control" id="updated-date">
+		</div>
 	<br>
 	<hr>
-	<button type="button" class="btn btn-primary">Save changes</button>
+	<button type="button" class="btn btn-primary" id="save-event-btn">Save changes</button>
 	<button type="button" class="btn btn-info" id="reset-values-event-modal">Reset Values</button>
       </div>
     </div>
@@ -136,8 +171,45 @@
 
 	<br>
 	<hr>
-	<button type="button" class="btn btn-primary">Save changes</button>
-	<button type="button" class="btn btn-info">Reset Values</button>
+	<button type="button" class="btn btn-primary" id="save-test-result-btn">Save changes</button>
+	<button type="button" class="btn btn-info" id="reset-values-test-result-modal">Reset Values</button>
+      </div>
+    </div>
+</div>
+</div>
+
+<!-- Relationship Modal -->
+<div class="modal fade" id="relationship-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Relationship</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+   <div class="input-group mb-2">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Relationship email</span>
+      </div>
+     <input type="text" class="form-control" id="relationship-email-in-modal">
+
+    </div>
+    <br>
+      <div class="input-group mb-2">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Relationship Type</span>
+      </div>
+
+     <input type="text" class="form-control" id="relationship-type-in-modal">
+    </div>
+
+  <br>
+  <hr>
+  <button type="button" class="btn btn-primary" id="save-relationship-btn">Save changes</button>
+  <button type="button" class="btn btn-info" id="reset-values-relationship-modal">Reset Values</button>
       </div>
     </div>
 </div>
@@ -151,6 +223,11 @@
         	<button class="btn btn-warning" type="button" id="add-test-result-btn" data-toggle="modal" data-target="#test-result-modal">
 		Add Test Result
 		</button>
+
+          <button class="btn btn-success" style="margin-left: 10px;" type="button" id="add-relationship-btn" data-toggle="modal" data-target="#relationship-modal">
+    Add Relationship
+    </button>
+
 	</div>
 	
 	<br>
