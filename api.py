@@ -67,8 +67,8 @@ class User(UserMixin, db1.Model):
     def is_anonymous(self):
         return False
 
-    #def get_id(self):
-        #return self.id
+    def get_id(self):
+        return str(self.email)
 
 class Relationship(db1.Model):
     __tablename__ = 'relationship'
