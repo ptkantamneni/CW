@@ -1,5 +1,6 @@
 # CRUD operations for events
 from flask import Blueprint, request, jsonify, session
+from flask_cors import CORS, cross_origin
 from api import db1 as db, Event, User
 from datetime import datetime, timedelta
 import event_scoring_route
@@ -18,7 +19,10 @@ def hello():
 
 @event.route('/create_event', methods = ['POST'])
 def createEvent():
+
+    print("here1")
     user_id = authUser()
+    print("here2")
     if(request.method == 'POST' and request.is_json):
         data = request.get_json()
         event = Event(
@@ -45,7 +49,11 @@ def createEvent():
         db.session.commit()
 
         user_route.updateUserScore(user_id)
-        return "Successfully created event"
+        resp = jsonify({"message": "Successfull creaed event." })
+        resp.headers['Access-Control-Allow-Credentials'] = 'true'
+        resp.headers['Access-Control-Allow-Headers'] = "Content-Type"
+          
+        return resp
     
     return "SWWE"
 

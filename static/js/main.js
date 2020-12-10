@@ -10,7 +10,12 @@ $( document ).ready(function() {
 		$("#event-attendee-count").val('');
 		$("#social-distance-rating").val('');
 		$("#mask-compliance-rating").val('');
-	});
+		$("#check-in-date").val('');
+		$("#check-out-date").val('');
+		$("#open-space").val('');
+		$("#update-date").val('');
+
+	});				
 
 	$("#reset-values-test-result-modal").click(function(){
 		console.log("reset2` called.");
@@ -21,18 +26,23 @@ $( document ).ready(function() {
 
 
 	$("#save-event-btn").click(function(){
-		var payload = { "firstName":  $("#first_name").val(), 
-				"lastName":   $("#last_name").val(),
-				"age": $("#age").val(),
-				"address": $("#address").val(),
-				"email": $("#email").val(),
-				"password": $("#password").val() }	
+		var payload = { "placeName" : $("#event-name").val(),
+		                "address" : $("#event-address").val(),
+		                "checkInDate" : $("#event-attendee-count").val(),
+		                "checkOutDate": $("#social-distance-rating").val(),
+		                "maskComplianceRating":   $("#mask-compliance-rating").val(),
+				"socialDistanceRating": $("#social-distance-rating").val(),
+				"checkInDate": $("#check-in-date").val(),
+				"checkOutDate": $("#check-out-date").val(),
+				"openSpace": $("#open-space").val(),
+                                "numPeople": $("#event-attendee-count").val(),
+				"updatedDate": $("#updated-date").val() }				
 
 
 		console.log(JSON.stringify(payload));
 
 		$.ajax({
-			'url' : 'http://localhost:5000/signup',
+			'url' : 'http://localhost:5000/event/create_event',
 			'type' : 'POST',
 			 contentType: 'application/json',
 			'data': JSON.stringify(payload),
