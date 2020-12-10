@@ -172,17 +172,72 @@
 	<canvas id="viewport" width="800" height="600"></canvas>
 
 	<script language="javascript" type="text/javascript">
-var sys = arbor.ParticleSystem(1000, 400,1);
+	var friends = new Array();
+	setInterval(function(){ 
+		getData('http://localhost:5000/relationship/getRelationship') 
+	}, 5000);
+			
+			
+			function getData(url) {
+				// // const url1 = 'http://localhost:5000/relationship/getRelationship';
+				// fetch(url)
+				// .then(response => response.json())
+				// .then(json => {
+				// 	// console.log(json);
+				// 	friends.push(json);
+				// 	// document.getElementById("userId").innerHTML = JSON.stringify(json)
+				// });
+
+				$.ajax({
+						'url' : url,
+						'type' : 'GET',
+						contentType: 'application/json',
+						'success' : function(data) {              
+							console.log("data" + JSON.stringify(data));
+							// friends.push(data);
+							window['data']=data;
+						},
+						'error' : function(request,error)
+						{
+							alert("Request: "+JSON.stringify(request));
+						}
+					}); 
+			}
+
+			const colors = ['red', 'green', 'blue', 'yellow'];
+			var color = colors[Math.floor(Math.random() * colors.length)];
+			console.log(color);
+			var friends = getData('http://localhost:5000/relationship/getRelationship');
+			setInterval(function() 
+			{
+				console.log(window['data']);
+			}, 1000);
+			friendsData = [];
+			nodesTmp = {};
+			edgesTmp = {};
+
+			// friends.foreach(fetchFriendsData);
+
+			// for(i=0;i<friends.length;i++)
+			// {
+			// 	data = getData('http://localhost:5000/user/getUserById?uid=' + friends[i]['friendId']);
+			// 	friendsData.push({'key': data['name'], 'value': data['riskScore']});
+			// }
+
+			// console.log(friendsData);
+
+			var sys = arbor.ParticleSystem(1000, 400,1);
             sys.parameters({gravity:true});
-            sys.renderer = Renderer("#viewport") ;
+            sys.renderer = Renderer("#viewport");
             var data = {
-               nodes:{
-                 me:{'color':'red','shape':'dot','label':'Aditya'},
-                 person1:{'color':'green','shape':'dot','label':'person1'},
-                 person2:{'color':'blue','shape':'dot','label':'person2'}
-               }, 
+				
+               	nodes: {
+					me:{'color':'red','shape':'dot','label':'phani'},
+					person1:{'color':'green','shape':'dot','label':'person1'},
+					person2:{'color':'blue','shape':'dot','label':'person2'}
+				}, 
                edges:{
-                 me:{ person1:{}, person2:{} }
+                 	me:{ person1:{}, person2:{} }
                }
              };
             sys.graft(data);
